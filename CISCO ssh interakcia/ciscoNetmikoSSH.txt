@@ -1,0 +1,30 @@
+from netmiko import ConnectHandler
+
+# Prihlasovacie údaje k Cisco zariadeniu
+device_ip = "192.168.1.1"  # Nahraďte správnou IP adresou
+username = "your_username"
+password = "your_password"
+device_type = "cisco_ios"
+
+# Definícia parametrov pre Netmiko
+device_params = {
+    "device_type": device_type,
+    "ip": device_ip,
+    "username": username,
+    "password": password,
+}
+
+# Pripojenie k zariadeniu cez SSH
+try:
+    with ConnectHandler(**device_params) as ssh_conn:
+        # Odošle príkaz "show ip route" a uloží výstup do premennej output
+        output = ssh_conn.send_command("show ip route")
+        
+        # Vyparsuje next hop z default route
+        default_route_info = [line for line in output.splitlines() if line.startswith("Gateway of last resort:")][0]
+        next_hop = default_route_info.split(",")[1].split(":")[1].strip()
+
+        # Vypíše next hop z default route
+        print(f"Next hop z default route na zariadení {device_ip}: {next_hop}")
+except Exception as e:
+    print(f"Nastala chyba pri pripájaní k zariadeniu: {e}")
