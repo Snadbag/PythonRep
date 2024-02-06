@@ -1,0 +1,42 @@
+import paramiko
+import re
+
+def connect_to_mikrotik(ip, username, password):
+    ssh = paramiko.SSHClient()
+    ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+    ssh.connect(ip, username=username, password=password)
+    return ssh
+
+def get_neighbors_info(ssh):
+    command = "/ip neighbor print detail"
+    stdin, stdout, stderr = ssh.exec_command(command)
+    output = stdout.read().decode('utf-8')
+    return output
+
+def parse_neighbors_info(neighbors_output):
+    neighbors = re.findall(r"([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)\s+(\S+)\s+(\S+)", neighbors_output)
+    return neighbors
+
+def print_neighbors(neighbors):
+    print("Neighbors:")
+    for neighbor in neighbors:
+        ip, identity, port = neighbor
+        print(f"IP: {ip}, Identity: {identity}, Port: {port}")
+
+def main():
+    ip = input("Enter MikroTik IP address: ")
+    username = input("Enter username: ")
+    password = input("Enter password: ")
+
+    try:
+        ssh = connect_to_mikrotik(ip, username, password)
+        neighbors_output = get_neighbors_info(ssh)
+        neighbors = parse_neighbors_info(neighbors_output)
+        print_neighbors(neighbors)
+    except Exception as e:
+        print(f"Error: {e}")
+    finally:
+        ssh.close()
+
+if __name__ == "__main__":
+    main()
