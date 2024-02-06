@@ -1,0 +1,46 @@
+import requests
+
+base_url = "http://localhost:5000"  # Přizpůsobte URL serveru podle potřeby
+
+def pridat_knihu():
+    nazev = input("Zadejte název knihy: ")
+    autor = input("Zadejte jméno autora: ")
+
+    data = {"nazev": nazev, "autor": autor}
+    response = requests.post(f"{base_url}/knihy", json=data)
+
+    if response.status_code == 201:
+        print("Kniha byla úspěšně přidána.")
+    else:
+        print(f"Chyba při přidávání knihy. Kód odpovědi: {response.status_code}")
+
+def zobrazit_knihy():
+    response = requests.get(f"{base_url}/knihy")
+
+    if response.status_code == 200:
+        knihy = response.json()
+        if knihy:
+            print("Seznam knih:")
+            for kniha in knihy:
+                print(f"Název: {kniha['nazev']}, Autor: {kniha['autor']}")
+        else:
+            print("V knihovně nejsou žádné knihy.")
+    else:
+        print(f"Chyba při získávání seznamu knih. Kód odpovědi: {response.status_code}")
+
+if __name__ == "__main__":
+    while True:
+        print("1. Přidat novou knihu")
+        print("2. Zobrazit všechny knihy")
+        print("0. Konec")
+
+        volba = input("Vyberte možnost (0-2): ")
+
+        if volba == "1":
+            pridat_knihu()
+        elif volba == "2":
+            zobrazit_knihy()
+        elif volba == "0":
+            break
+        else:
+            print("Neplatná volba. Zadejte prosím znovu.")
