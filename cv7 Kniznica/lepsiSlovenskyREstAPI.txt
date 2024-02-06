@@ -1,0 +1,55 @@
+#!/usr/bin/env python3
+from flask import Flask,render_template,request
+import urllib.request as ur
+import requests
+import xml.etree.ElementTree as ET
+import tkinter as tk
+
+URL="http://192.168.0.70:8888/"
+odpoved = requests.get(URL)
+
+
+
+def vytvorGUI():
+    okno = tk.Tk()
+    nastavGUI(okno)
+    okno.mainloop()
+
+def nastavGUI(okno):
+    okno.title("Pridaj kniznicu")
+    okno.geometry("655x420+400+300")
+    okno.resizable(False,False)
+
+    labelID = tk.Label(okno, text="id")
+    labelID.grid(row=0, column=0, sticky="w", padx=5)
+    entryID = tk.Entry(okno)
+    entryID.grid(row=0, column=1, ipadx=100)
+
+
+
+    labelNAZOV = tk.Label(okno, text="nazov")
+    labelNAZOV.grid(row=10, column=0, sticky="w", padx=5)
+    entryNAZOV = tk.Entry(okno)
+    entryNAZOV.grid(row=10, column=1, ipadx=100)
+
+
+    labelPOPIS = tk.Label(okno, text="Popis")
+    labelPOPIS .grid(row=20, column=0, sticky="w", padx=5)
+    entryPOPIS = tk.Entry(okno)
+    entryPOPIS.grid(row=20, column=1, ipadx=100)
+
+
+    buttonODOSLAT = tk.Button(okno, text="ODOSLAT",command=lambda: obsluzButton())
+    buttonODOSLAT.grid(row=40, column=1, ipadx=100)
+
+    def obsluzButton():
+        id = entryID.get()
+        nazov = entryNAZOV.get()
+        popis = entryPOPIS.get()
+        r = requests.post("http://192.168.0.70:8888/knihy", json = {"id":id,"nazov":nazov,"popis":popis})
+
+
+
+
+if name == "main": 
+    vytvorGUI()
