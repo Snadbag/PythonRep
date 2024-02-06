@@ -1,0 +1,5 @@
+
+Vytvorte program s GUI (pomocou Tkinter), ktorý z RSS súboru, dostupnom na URL https://mikrotik.com/download.rss vyparsuje informácie o dostupných verziách Mikrotik RouterOS:
+verzia
+vetva (stable, Long-term, Testing, Development) changelog
+Aplikácia zobrazí dostupné verzie (spolu s vetvou) v ComboBox prvku GUI rozhrania a changelog vybratej verzie z ComboBoxu zobrazí v prvku Text.
